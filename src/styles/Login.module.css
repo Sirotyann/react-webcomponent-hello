@@ -1,0 +1,10 @@
+.row{
+    padding: 5px 0 5px;
+}
+
+.row label{
+    padding: 0 10px 0;
+    text-align: left;    
+    display: inline-block;
+    min-width: 120px;
+}
