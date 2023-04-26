@@ -2,10 +2,17 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import App from './App'
+// import App from './App'
 import Script from 'next/script'
+import dynamic from 'next/dynamic'
 
 const inter = Inter({ subsets: ['latin'] })
+
+const ComponentWithNoSSR = dynamic(
+  () => import('./App'),
+  { ssr: false }
+)
+
 
 export default function Home() {
   console.log('render home')
@@ -19,7 +26,7 @@ export default function Home() {
       </Head>
       <script src='/components.js'></script>
       <main className={styles.main}>
-        <App />
+        <ComponentWithNoSSR />
       </main>
     </>
   )

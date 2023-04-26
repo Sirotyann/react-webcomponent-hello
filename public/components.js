@@ -45,7 +45,10 @@ if (typeof HelloButton === 'undefined') {
 
         connectedCallback() {
             this.shadow.addEventListener('click', () => {
-                this.parentNode.submit();
+                console.log(this.getAttribute('type'))
+                if(this.getAttribute('type') === 'submit') {
+                    this.parentNode.submit();
+                }
             });
         }
     }
@@ -65,21 +68,21 @@ if (typeof HelloInput === 'undefined') {
         constructor() {
             super();
 
-            const disabled = this.getAttribute('disabled');
-            const placeholder = this.getAttribute('placeholder');
-            const type = this.getAttribute('type');
-            const name = this.getAttribute('name');
-
             this.shadow = this.attachShadow({ mode: 'open' });
-            this.shadow.append(HelloInput.build({
-                disabled: disabled ?? false,
-                name,
-                placeholder: placeholder ?? '',
-                type: type ?? 'text'
-            }));
+            this.shadow.append(HelloInput.build());
 
             this.internals = this.attachInternals();
             this.input = this.shadow.querySelector('input');
+        }
+
+        initAttribute(...attrNames) {
+            attrNames.forEach(attrName => {
+                this[attrName] = this.getAttribute(attrName)
+            });
+
+            attrNames.forEach(attrName => {
+                console.log(` -- init attr: ${attrName}`, this[attrName])
+            });
         }
 
         static style = `
@@ -114,18 +117,13 @@ if (typeof HelloInput === 'undefined') {
             this.input.value = value;
             this.internals.setFormValue(value);
         }
-        
+
         /**
          *
-         * @param props
          */
-        static build(props) {
-            console.log(props);
-            const { disabled, placeholder, type, name } = props;
+        static build() {
             const template = document.createElement('template');
-            template.innerHTML = `<style>${HelloInput.style}</style>
-            <input name="${name}" ${disabled ? 'disabled' : ''} type="${type}" ${placeholder ? `placeholder="${placeholder}"` : ''}/>`;
-
+            template.innerHTML = `<style>${HelloInput.style}</style><input />`;
             return template.content.cloneNode(true);
         }
 
@@ -149,29 +147,34 @@ if (typeof HelloInput === 'undefined') {
          */
         attributeChangedCallback(name, oldVal, newVal) {
             console.log('# input attr changed', { name, oldVal, newVal });
-            this.internals.setFormValue(newVal)
+            // this.internals.setFormValue(newVal)
+        }
+
+        adoptedCallback() {
+            console.log('__ adoptedCallback', this.getAttribute('onChange'), this.getAttribute('fn'))
         }
 
         /**
          *
          */
         connectedCallback() {
-            const disabled = this.getAttribute('disabled');
-            const placeholder = this.getAttribute('placeholder');
-            const type = this.getAttribute('type');
-            const name = this.getAttribute('name');
+            console.log('__ connectedCallback', this.getAttribute('onChange'), this.getAttribute('fn'))
+            this.initAttribute('disabled', 'placeholder', 'type', 'name', 'onChange', 'onBlur', 'wtf', 'ref');
 
-            this.input.setAttribute('name', name);
-            placeholder && this.input.setAttribute('placeholder', placeholder);
-            this.input.setAttribute('type', type);
-            disabled && this.input.setAttribute('disabled', disabled);
+            this.input.setAttribute('name', this.name);
+            this.placeholder && this.input.setAttribute('placeholder', this.placeholder);
+            this.input.setAttribute('type', this.type);
+            this.disabled && this.input.setAttribute('disabled', this.disabled);
 
-            console.log('# connectedCallback  ', { name, type, placeholder, disabled });
+            // console.log('# connectedCallback  ', { name: this.name });
 
             this.input.addEventListener('change', (e) => {
                 const clone = new e.constructor(e.type, e); // clone the event
                 this.dispatchEvent(clone); // and then forward it
                 this.value = this.input.value;
+
+                console.log("## this.onChange", { clone, onchange: this.getAttribute('onChange') })
+                this.getAttribute('onChange')?.(e); // React only allows string attr, so onChange would be always null
             });
         }
     }
@@ -182,4 +185,3 @@ if (typeof HelloInput === 'undefined') {
         customElements.define('hello-input', HelloInput);
     } catch (e) { }
 }
-

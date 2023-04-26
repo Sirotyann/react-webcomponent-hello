@@ -6,7 +6,6 @@ function Login() {
     const formRef = React.useRef(null);
 
     const submitForm = () => {
-        console.log("submit form", formRef.current, formRef.current?.dataset)
         const form = formRef.current;
         if (form) {
             const data = new FormData(form);
@@ -27,7 +26,7 @@ function Login() {
             </div>
             <div className={styles.row}>
                 <label>Password:</label>
-                <hello-input name='password' type='password' />
+                <hello-input id='helloInput' name='password' type='password' />
             </div>
             <hello-button type="submit ">Login</hello-button>
             <button onClick={submitForm}>Submit</button>

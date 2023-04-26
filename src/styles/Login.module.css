@@ -1,5 +1,6 @@
 .row{
-    padding: 5px 0 5px;
+    padding: 15px 0 15px;
+    border-bottom: 1px solid #dcdcdc;
 }
 
 .row label{
@@ -7,4 +8,10 @@
     text-align: left;    
     display: inline-block;
     min-width: 120px;
+}
+
+.row .error {
+    color: red;
+    font-size: 0.8em;
+    padding: 15px 10px 0;
 }
