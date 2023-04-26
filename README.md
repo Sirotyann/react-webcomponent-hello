@@ -5,7 +5,10 @@ https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/
 
 https://javascript.works-hub.com/learn/web-components-api-lifecycle-events-and-custom-events-66668
 
+- Component Interop With React And Custom Elements
+https://addyosmani.com/blog/component-interop-with-react-and-custom-elements/
 
 # pass functions to web component in React
 https://github.com/hybridsjs/hybrids/issues/15
 https://github.com/webcomponents/react-integration#readme
+

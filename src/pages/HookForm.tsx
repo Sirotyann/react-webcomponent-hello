@@ -1,9 +1,8 @@
 import React from 'react';
 import styles from '@/styles/Login.module.css'
 import { useForm } from 'react-hook-form'
-const fn = () => {
-    console.log(" value changed")
-}
+import Wrapper from './Wrapper'
+
 function HookForm() {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -26,7 +25,7 @@ function HookForm() {
             <div className={styles.row}>
                 <label>Last name:</label>
                 {/* <hello-input name='lastName' type='string' {...register("lastName")}/> */}
-                <hello-input name='lastName' type='string' {...register("lastName", { required: true })} />
+                <Wrapper><hello-input name='lastName' type='string' {...register("lastName", { required: true })} /></Wrapper>
                 {errors.lastName?.type === 'required' && <p role="alert" className={styles.error}>Last name is required</p>}
             </div>
 
