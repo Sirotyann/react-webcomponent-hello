@@ -12,3 +12,4 @@ https://addyosmani.com/blog/component-interop-with-react-and-custom-elements/
 https://github.com/hybridsjs/hybrids/issues/15
 https://github.com/webcomponents/react-integration#readme
 
+https://github.com/nmetulev/wc-react

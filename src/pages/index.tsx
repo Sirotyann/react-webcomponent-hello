@@ -15,7 +15,7 @@ const ComponentWithNoSSR = dynamic(
 
 
 export default function Home() {
-  console.log('render home')
+  
   return (
     <>
       <Head>

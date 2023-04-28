@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="/components.js"></script>
+    <script>
+        function test() {
+            console.log("test")
+        }
+
+        function onBlur(e) {
+            console.log("onBlur", e)
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Static page</h1>
+    <form action="/login">
+        <hello-input name='firstName' type='text' onBlur="onBlur"></hello-input>
+        <hello-input name='lastName' type='text'></hello-input>
+        <hello-button type="submit" onclick="test">Submit</hello-button>
+    </form>
+</body>
+
+</html>
