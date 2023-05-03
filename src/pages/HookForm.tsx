@@ -1,37 +1,34 @@
-import React, { useEffect, useRef } from 'react';
-import styles from '@/styles/Login.module.css'
-import { useForm } from 'react-hook-form'
-import HelloInputWrapper from './HelloInput'
-import { wrap } from './Wrapper';
-import { wrapWc } from './Wc'
-import WcComponent from './WcComponent';
+import React from 'react';
+import styles from '@/styles/Login.module.css';
+import { useForm } from 'react-hook-form';
+// import { wrapWc } from './Wc';
+import { wrapWc } from 'wc-react';
+import WcComponent from './WcComponent';;
+import SubmitButton from './SubmitButton';
 
-const WCInput = wrapWc('hello-input')
+// const WCInput = wrapWc('hello-input')
 
 function HookForm() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = (data: Object) => console.log(`- HookForm - submit - `, data);
+    const onSubmit = (data: Object) => {
+        console.log(`- HookForm - submit - `, data)
+        alert("submit")
+    };
 
-    const ref = useRef(null)
-
-    const firstNameRegister = register("firstName", { required: true });
-    console.log({ firstNameRegister })
-    console.log({
-        buttonRef: ref
-    })
 
     return <div>
-        <form onSubmit={handleSubmit(onSubmit)} >
+        <form id='hook-form' onSubmit={handleSubmit(onSubmit, (errors) => {
+            console.log("errors", errors)
+        })} >
             <div className={styles.row}>
                 <label>First name:</label>
-                <WcComponent tagName='hello-input' {...register("firstName", { required: true })} />
+                <WcComponent tag='hello-input' {...register("firstName", { required: true })} />
                 {errors.firstName?.type === 'required' && <p role="alert" className={styles.error}>First name is required</p>}
             </div>
 
             <div className={styles.row}>
                 <label>Last name:</label>
-                {/* <hello-input name='lastName' type='string' {...register("lastName")}/> */}
-                <hello-input name='lastName' type='string' {...register("lastName", { required: true })} onSubmit={() => console.log("input submit")} />
+                <hello-input name='lastName' type='string' {...register("lastName", { required: true })} />
                 {errors.lastName?.type === 'required' && <p role="alert" className={styles.error}>Last name is required</p>}
             </div>
 
@@ -44,13 +41,22 @@ function HookForm() {
 
             {/* <button type="submit">Login</button> */}
             {/* <input type='submit'/> */}
-            {/* <hello-button type='submit'>Login</hello-button> */}
-            <hello-button onClick={() => {
-                console.log('submit')
-            }}>Login</hello-button>
-            {/* <WcComponent tagName='hello-button' onClick={() => {
+
+            <SubmitButton />
+
+            {/* <hello-button form='hook-form' onClick={(e) => {
+                console.log(" should submit ", { e, handleSubmit });
+                handleSubmit(onSubmit, (errors) => {
+                    console.log("errors", errors)
+                })
+                // handleSubmit(onSubmit)
+            }}>hello</hello-button>
+            <WcComponent tag='hello-button' form='hook-form'  type='submit' onClick={() => {
                 console.log("Clicked!!!!!")
-            }} >Click</WcComponent> */}
+                handleSubmit(onSubmit, (errors) => {
+                    console.log("errors", errors)
+                })
+            }}>WcComponent</WcComponent> */}
         </form>
     </div>
 }

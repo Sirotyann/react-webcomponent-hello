@@ -1,21 +1,30 @@
-import React, { useRef, useEffect } from 'react';
+import React, { ReactNode, RefObject, Component } from 'react';
 
-class WcComponent extends React.Component {
-    constructor(props) {
+type Prop = {
+    [x: string]: any;
+}
+
+type WcComponentProps = Prop & {
+    tag: string;
+    children: ReactNode;
+}
+
+class WcComponent extends Component<WcComponentProps> {
+    constructor(props: any) {
         super(props);
 
         this.listeners = new Map(Object.keys(props).filter(it => it.startsWith('on')).map(key => ([key, props[key]])));
         this.elementRef = React.createRef();
-        // this.listeners = {};
     }
 
-    listenersAttached: false;
+    protected listeners: Map<string, EventListenerOrEventListenerObject>;
+    protected elementRef: RefObject<HTMLElement>;
+    protected listenersAttached: boolean = false;
 
     addEventListeners() {
-        console.log("## addEventListeners", this.listeners)
         if (!this.listenersAttached && this.elementRef.current !== null) {
             this.listeners.forEach((callback, key) => {
-                this.elementRef.current.addEventListener(key, callback);
+                this.elementRef.current?.addEventListener(key, callback);
             })
 
             this.listenersAttached = true;
@@ -23,10 +32,9 @@ class WcComponent extends React.Component {
     }
 
     removeEventListeners() {
-        console.log("## removeEventListeners", this.listeners)
         if (this.listenersAttached && this.elementRef.current !== null) {
             this.listeners.forEach((callback, key) => {
-                this.elementRef.current.removeEventListener(key, callback);
+                this.elementRef.current?.removeEventListener(key, callback);
             })
 
             this.listenersAttached = false;
@@ -42,18 +50,13 @@ class WcComponent extends React.Component {
     }
 
     render() {
-        console.log("## this.props", this.props)
-        const { tagName, children } = this.props;
-        const TagName = tagName;
-
-        console.log(`## WcComponent render `, this.elementRef)
+        const { tag, children } = this.props;
+        const TagName: any = tag;
+        // console.log("#TagName", {TagName, props:})
         this.addEventListeners();
         return <TagName {...this.props} ref={this.elementRef}>{children}</TagName>;
     }
 }
 
-// const Wrapper = (props) {
-//     return  <></>
-// }
 
 export default WcComponent;

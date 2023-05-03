@@ -44,14 +44,14 @@ if (typeof HelloButton === 'undefined') {
         }
 
         connectedCallback() {
-            this.shadow.addEventListener('click', () => {
-                console.log(this.getAttribute('type'))
-                if(this.getAttribute('type') === 'submit') {
-                    this.parentNode.submit();
-                }
+            // this.shadow.addEventListener('click', () => {
+            //     console.log(this.getAttribute('type'))
+            //     if(this.getAttribute('type') === 'submit') {
+            //         this.parentNode.submit();
+            //     }
 
-                console.log("Button onclick", this.getAttribute('onClick'))
-            });
+            //     console.log("Button onclick", this.getAttribute('onClick'))
+            // });
         }
     }
 
