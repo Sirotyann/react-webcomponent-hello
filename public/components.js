@@ -1,15 +1,19 @@
+/* eslint-disable max-classes-per-file */
 /**
- * Button
+ * Button.
  */
-if (typeof HelloButton === 'undefined') {
-    class HelloButton extends HTMLElement {
+if (typeof TjButton === 'undefined') {
+    class TjButton extends HTMLElement {
+        /**
+         *
+         */
         constructor() {
             super();
             const disabled = this.getAttribute('disabled');
             const type = this.getAttribute('type');
 
             this.shadow = this.attachShadow({ mode: 'open' });
-            this.shadow.append(HelloButton.build({
+            this.shadow.append(TjButton.build({
                 disabled: disabled ?? false,
                 type: type ?? 'button'
             }));
@@ -21,8 +25,8 @@ if (typeof HelloButton === 'undefined') {
 
         static style = `
         button {
-            background-color: #577bdf;
-            border: 1px solid #499139;
+            background-color: #ff7777;
+            border: 1px solid #ff9999;
             color: #fff;
             border-radius: 5px;
             font-size: 12px;
@@ -36,62 +40,76 @@ if (typeof HelloButton === 'undefined') {
         }
         `;
 
+        /**
+         *
+         * @param props
+         */
         static build(props) {
             const { disabled, type } = props;
             const template = document.createElement('template');
-            template.innerHTML = `<style>${HelloButton.style}</style><Button disabled="${disabled}" type="${type}"><slot></slot></Button>`;
+            template.innerHTML = `<style>${TjButton.style}</style><Button disabled="${disabled}" type="${type}"><slot></slot></Button>`;
             return template.content.cloneNode(true);
         }
 
-        connectedCallback() {
-            // this.shadow.addEventListener('click', () => {
-            //     console.log(this.getAttribute('type'))
-            //     if(this.getAttribute('type') === 'submit') {
-            //         this.parentNode.submit();
-            //     }
-
-            //     console.log("Button onclick", this.getAttribute('onClick'))
-            // });
-        }
     }
 
 
     try {
         // console.log("# define hello-button")
-        customElements.define('hello-button', HelloButton);
-    } catch (e) { }
+        customElements.define('tj-button', TjButton);
+    } catch (e) {
+        console.error('Cannot define tj-button', e);
+    }
 }
 
 /**
- * Input
+ * Input.
  */
-if (typeof HelloInput === 'undefined') {
-    class HelloInput extends HTMLElement {
+if (typeof TjInput === 'undefined') {
+    class TjInput extends HTMLElement {
+        /**
+         *
+         */
         constructor() {
             super();
 
             this.shadow = this.attachShadow({ mode: 'open' });
-            this.shadow.append(HelloInput.build());
+            this.shadow.append(TjInput.build());
 
             this.internals = this.attachInternals();
             this.input = this.shadow.querySelector('input');
         }
 
-        initAttribute(...attrNames) {
+        /**
+         *
+         * @param attrNames
+         */
+        initAttribute(attrNames) {
             attrNames.forEach(attrName => {
-                this[attrName] = this.getAttribute(attrName)
+                this[attrName] = this.getAttribute(attrName);
+                this[attrName] !== null && this.input.setAttribute(attrName, this[attrName]);
             });
-
-            // attrNames.forEach(attrName => {
-            //     console.log(` -- init attr: ${attrName}`, this[attrName])
-            // });
         }
+
+        static listenedAttributes = [
+            'value',
+            'disabled',
+            'placeholder',
+            'type',
+            'name',
+            'onChange',
+            'onBlur',
+            'onSubmit',
+            'width',
+            'align',
+            'ref'
+        ];
 
         static style = `
             input {
                 box-sizing: border-box;
                 margin: 0px;
-                border: 1px solid #cccccc;
+                border: 1px solid #ffcccc;
                 outline: none;
                 text-align: left;
                 border-radius: 5px;
@@ -105,6 +123,7 @@ if (typeof HelloInput === 'undefined') {
                 -webkit-box-shadow: none;
                 color: rgba(0, 0, 0, 0.75);
                 display: inline-block;
+                width: 100%;
             }
         `;
 
@@ -115,6 +134,9 @@ if (typeof HelloInput === 'undefined') {
             return this.input?.value;
         }
 
+        /**
+         *
+         */
         set value(value) {
             this.input.value = value;
             this.internals.setFormValue(value);
@@ -125,7 +147,7 @@ if (typeof HelloInput === 'undefined') {
          */
         static build() {
             const template = document.createElement('template');
-            template.innerHTML = `<style>${HelloInput.style}</style><input />`;
+            template.innerHTML = `<style>${TjInput.style}</style><input />`;
             return template.content.cloneNode(true);
         }
 
@@ -144,16 +166,24 @@ if (typeof HelloInput === 'undefined') {
         /**
          *
          * @param name
+         */
+        initEvent(name) {
+            this.input.addEventListener(name, (e) => {
+                const clone = new e.constructor(e.type, e); // clone the event
+                this.dispatchEvent(clone); // and then forward it
+                this.value = this.input.value;
+            });
+        }
+
+        /**
+         *
+         * @param name
          * @param oldVal
          * @param newVal
          */
         attributeChangedCallback(name, oldVal, newVal) {
-            // console.log('# input attr changed', { name, oldVal, newVal });
-            // this.internals.setFormValue(newVal)
-        }
-
-        adoptedCallback() {
-            console.log('__ adoptedCallback', this.getAttribute('onChange'), this.getAttribute('fn'))
+            console.log('TjInput attributeChangedCallback', { name, oldVal, newVal });
+            this.initAttribute([name]);
         }
 
         /**
@@ -161,36 +191,33 @@ if (typeof HelloInput === 'undefined') {
          */
         connectedCallback() {
             // console.log('__ connectedCallback', this.getAttribute('onChange'), this.getAttribute('fn'))
-            this.initAttribute('disabled', 'placeholder', 'type', 'name', 'onChange', 'onBlur', 'onSubmit', 'ref');
+            this.initAttribute(TjInput.listenedAttributes);
+            this.initEvent('change');
+            this.initEvent('blur');
+            // this.initEvent('input', this.getAttribute('onChange'));
+            // this.input.addEventListener('change', (e) => {
+            //     console.log('__ changes event', this.input.value);
+            //     const clone = new e.constructor(e.type, e); // clone the event
+            //     this.dispatchEvent(clone); // and then forward it
+            //     this.value = this.input.value;
+            //     this.getAttribute('onChange')?.(e); // React only allows string attr, so onChange would be always null
+            // });
 
-            this.input.setAttribute('name', this.name);
-            this.placeholder && this.input.setAttribute('placeholder', this.placeholder);
-            this.input.setAttribute('type', this.type);
-            this.disabled && this.input.setAttribute('disabled', this.disabled);
-
-            this.input.addEventListener('change', (e) => {
-                const clone = new e.constructor(e.type, e); // clone the event
-                this.dispatchEvent(clone); // and then forward it
-                this.value = this.input.value;
-
-                console.log("## this.onChange", { clone, onchange: this.getAttribute('onChange') })
-                this.getAttribute('onChange')?.(e); // React only allows string attr, so onChange would be always null
-            });
-
-            this.input.addEventListener('blur', (e) => {
-                const clone = new e.constructor(e.type, e); // clone the event
-                this.dispatchEvent(clone); // and then forward it
-                this.value = this.input.value;
-
-                console.log("## this.onBlur", { clone, onchange: this.getAttribute('onBlur') })
-                this.getAttribute('onBlur')?.(e); // React only allows string attr, so onChange would be always null
-            });
+            // this.input.addEventListener('blur', (e) => {
+            //     console.log('__ blur event', this.input.value);
+            //     const clone = new e.constructor(e.type, e); // clone the event
+            //     this.dispatchEvent(clone); // and then forward it
+            //     this.value = this.input.value;
+            //     this.getAttribute('onBlur')?.(e); // React only allows string attr, so onChange would be always null
+            // });
         }
     }
 
 
     try {
         // console.log("# define hello-input")
-        customElements.define('hello-input', HelloInput);
-    } catch (e) { }
+        customElements.define('tj-input', TjInput);
+    } catch (e) {
+        console.error('Cannot define tj-input', e);
+    }
 }

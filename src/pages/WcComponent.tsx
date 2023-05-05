@@ -13,7 +13,7 @@ class WcComponent extends Component<WcComponentProps> {
     constructor(props: any) {
         super(props);
 
-        this.listeners = new Map(Object.keys(props).filter(it => it.startsWith('on')).map(key => ([key, props[key]])));
+        this.listeners = new Map(Object.keys(props).filter(it => it.startsWith('on')).map(key => ([key.slice(2).toLowerCase(), props[key]])));
         this.elementRef = React.createRef();
     }
 
@@ -26,7 +26,6 @@ class WcComponent extends Component<WcComponentProps> {
             this.listeners.forEach((callback, key) => {
                 this.elementRef.current?.addEventListener(key, callback);
             })
-
             this.listenersAttached = true;
         }
     }

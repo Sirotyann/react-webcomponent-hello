@@ -7,7 +7,7 @@ function SubmitButton() {
 
     return (<>
         <button type="submit" ref={buttonRef} style={{ display: 'none' }}>Login</button>
-        <WcComponent tag='hello-button' form='hook-form' type='submit' onClick={() => {
+        <WcComponent tag='tj-button' form='hook-form' type='submit' onClick={() => {
             (buttonRef.current as HTMLButtonElement | null)?.click();
         }}>
             Submit
