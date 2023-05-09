@@ -1,4 +1,4 @@
-import {TJWebComponent} from "@/components/BaseWebComponent";
+import {TJWebComponent} from "./tjWebComponent";
 
 @TJWebComponent('tj-button')
 export class TjInput extends HTMLElement {
