@@ -1,7 +1,7 @@
 import React from 'react';
-import Login from './Login';
 import HookForm from './HookForm';
-import Wrapper from './Wrapper'
+import {TjButton} from "@/components/tjButton";
+import {TjInput} from "@/components/tjInput";
 
 function App() {
     return <div>
