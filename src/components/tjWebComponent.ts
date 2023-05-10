@@ -10,24 +10,32 @@ interface RegisteredTJWebComponentClass {
   }
 }
 
-export function register (tagName: TagName, opts?: TJWebComponentOptions) {
+export function define (tagName: TagName, opts?: TJWebComponentOptions) {
   return function (target: new () => HTMLElement) {
     customElements.define(tagName, target, opts ?? {});
   }
 }
 
-export function Tjwc<C extends new(...args: any[]) => HTMLElement>(baseClass: C, role: ARIARole) {
-  return class extends baseClass implements RegisteredTJWebComponentClass {
+export function AsWebComponent<C extends new(...args: any[]) => HTMLElement>(baseClass: C, role: ARIARole) {
+  return class TjWebComponent extends baseClass implements RegisteredTJWebComponentClass {
     tjwc = {
       role
     }
 
     constructor (...args: any[]) {
       super(...args);
-      this.attachShadow({mode: 'open'});
+      this.attachShadow({mode: 'open'})
     }
 
-    setUp () {
+    connectedCallback () {
+      this.setUp();
+    }
+
+    protected append (el: HTMLElement) {
+      this.shadowRoot?.append(el)
+    }
+
+    protected setUp () {
       this.role = this.tjwc.role;
       this.setAttribute('role', this.role);
     }

@@ -1,15 +1,16 @@
-import {register} from "./tjWebComponent";
+import {AsWebComponent, define} from "./tjWebComponent";
 
-@register('tj-button')
-export class TjInput extends HTMLElement {
+@define('tj-input')
+export class TjInput extends AsWebComponent(HTMLElement, 'textbox') {
+  input: HTMLInputElement;
+  internals: ElementInternals;
   constructor() {
     super();
 
-    this.shadow = this.attachShadow({mode: 'open'});
-    this.shadow.append(TjInput.build());
+    this.append(TjInput.build());
 
     this.internals = this.attachInternals();
-    this.input = this.shadow.querySelector('input');
+    this.input = this.shadowRoot?.querySelector('input') as HTMLInputElement;
   }
 
   initAttribute(attrNames) {
