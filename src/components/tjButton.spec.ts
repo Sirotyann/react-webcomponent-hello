@@ -8,6 +8,8 @@ describe('TJ Button', () => {
     const buttonText = 'ailurus';
     await fixture(`<tj-button>${buttonText}</tj-button>`);
 
+    await customElements.whenDefined('tj-button')
+
     expect(screen.getByRole('button', {name: buttonText})).toBeTruthy();
   });
 

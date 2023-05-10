@@ -1,6 +1,6 @@
-import {TJWebComponent} from "./tjWebComponent";
+import {register} from "./tjWebComponent";
 
-@TJWebComponent('tj-button')
+@register('tj-button')
 export class TjInput extends HTMLElement {
   constructor() {
     super();

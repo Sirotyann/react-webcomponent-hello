@@ -1,8 +1,6 @@
 import React from 'react';
 import HookForm from './HookForm';
-import {TjButton} from "@/components/tjButton";
-import {TjInput} from "@/components/tjInput";
-
+import '../components/tjButton';
 function App() {
     return <div>
         <h1>A React Web component test field.</h1>

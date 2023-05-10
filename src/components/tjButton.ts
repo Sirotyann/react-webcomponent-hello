@@ -1,24 +1,18 @@
-import {TJWebComponent} from "./tjWebComponent";
+import {register, Tjwc} from "./tjWebComponent";
 
-@TJWebComponent('tj-button')
-export class TjButton extends HTMLElement {
-  shadow: ShadowRoot;
-  button: HTMLButtonElement | null;
-
-  constructor() {
-    super();
+@register('tj-button')
+export class TjButton extends Tjwc(HTMLElement, 'button') {
+  connectedCallback () {
+    this.setUp();
     const disabled = this.getAttribute('disabled');
     const type = this.getAttribute('type');
 
-    this.setAttribute('role', 'button');
-
-    this.shadow = this.attachShadow({mode: 'open'});
-    this.shadow.append(TjButton.build({
+    this.shadowRoot?.append(TjButton.build({
       disabled: disabled === 'true',
       type: type ?? 'button'
     }));
 
-    this.button = this.shadow.querySelector('button');
+    this.shadowRoot?.querySelector('button');
   }
 
   static style = `
@@ -42,7 +36,7 @@ export class TjButton extends HTMLElement {
     // TODO: break logic found here into base class. Styles should be it's own thing as well.
     const {disabled, type} = props;
     const template = document.createElement('template');
-    template.innerHTML = `<style>${TjButton.style}</style><Button disabled="${disabled}" type="${type}"><slot></slot></Button>`;
+    template.innerHTML = `<style>${TjButton.style}</style><button disabled="${disabled}" type="${type}"><slot></slot></button>`;
     return template.content.cloneNode(true);
   }
 
